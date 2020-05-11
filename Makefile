@@ -6,7 +6,7 @@ layer = *
 docker-images:
 	PWD=pwd
 	set -e; \
-	for dir in layers/${layer}; do \
+	for dir in layers/cassandra; do \
 		for php_version in $(php_versions); do \
 			echo "###############################################"; \
 			echo "###############################################"; \
