@@ -113,10 +113,18 @@ FROM lambci/lambda:provided
 # php extension binary
 COPY --from=ext /tmp/cassandra.so /opt/bref-extra/cassandra.so
 # cassandra cpp driver files
-COPY --from=ext /usr/lib64/libcassandra.so /opt/bref/lib64/cassandra.so
-COPY --from=ext /usr/include/cassandra.h /opt/bref/include/cassandra.h
+# COPY --from=ext /usr/lib64/libcassandra.so /opt/bref/lib64/libcassandra.so
+COPY --from=ext /usr/lib64/libcassandra.so.2 /opt/bref/lib64/libcassandra.so.2
+# COPY --from=ext /usr/lib64/libcassandra.so.2.15.1 /opt/bref/lib64/libcassandra.so.2.15.1
 COPY --from=ext /usr/lib64/libcassandra_static.a /opt/bref/lib64/libcassandra_static.a
+
+COPY --from=ext /usr/include/cassandra.h /opt/bref/include/cassandra.h
+COPY --from=ext /usr/include/dse.h /opt/bref/include/dse.h
+
+COPY --from=ext /usr/lib64/pkgconfig/cassandra.pc /opt/bref/lib64/pkgconfig/cassandra.pc
+COPY --from=ext /usr/lib64/pkgconfig/cassandra_static.pc /opt/bref/lib64/pkgconfig/cassandra_static.pc
+
 # dependencies
-COPY --from=ext //usr/lib64/libuv.so /opt/bref/lib64/libuv.so
+COPY --from=ext /usr/lib64/libuv.so.1 /opt/bref/lib64/libuv.so.1
 
 
