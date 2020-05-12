@@ -1,8 +1,15 @@
 ARG PHP_VERSION
 FROM bref/build-php-$PHP_VERSION AS ext
 
-ENV LIBUV_VERSION 1.35.0
-ENV CCP_DRIVER_VERSION 2.15.1
+# newest
+# ENV LIBUV_VERSION 1.35.0
+# ENV CCP_DRIVER_VERSION 2.15.1
+
+# post processor 
+ENV LIBUV_VERSION 1.18.0
+ENV CCP_DRIVER_VERSION 2.8.1
+#ENV CASSANDRA_VERSION 1.3.2
+
 
 # Fix library path
 ENV LD_LIBRARY_PATH=/usr/lib:/usr/lib64:$LD_LIBRARY_PATH
@@ -19,21 +26,24 @@ WORKDIR /tmp
 # RUN rpm -qlp cpp-dev.rpm
 
 
-RUN yum install -y automake cmake gcc gcc-c++ git libtool openssl-devel wget gmp gmp-devel boost php-devel pcre-devel 
-
 # Install dependencies
-RUN curl -o libuv.rpm https://downloads.datastax.com/cpp-driver/centos/7/dependencies/libuv/v$LIBUV_VERSION/libuv-$LIBUV_VERSION-1.el7.x86_64.rpm
+# RUN curl -o -v libuv.rpm https://downloads.datastax.com/cpp-driver/centos/7/dependencies/libuv/v$LIBUV_VERSION/libuv-$LIBUV_VERSION-1.el7.x86_64.rpm
+RUN curl -o libuv.rpm https://downloads.datastax.com/cpp-driver/centos/7/dependencies/libuv/v$LIBUV_VERSION/libuv-$LIBUV_VERSION-1.el7.centos.x86_64.rpm
 RUN yum install -y libuv.rpm
-RUN curl -o libuv-dev.rpm https://downloads.datastax.com/cpp-driver/centos/7/dependencies/libuv/v$LIBUV_VERSION/libuv-devel-$LIBUV_VERSION-1.el7.x86_64.rpm
+# RUN curl -o -v libuv-dev.rpm https://downloads.datastax.com/cpp-driver/centos/7/dependencies/libuv/v$LIBUV_VERSION/libuv-devel-$LIBUV_VERSION-1.el7.x86_64.rpm
+RUN curl -o libuv-dev.rpm https://downloads.datastax.com/cpp-driver/centos/7/dependencies/libuv/v$LIBUV_VERSION/libuv-devel-$LIBUV_VERSION-1.el7.centos.x86_64.rpm
 RUN yum install -y libuv-dev.rpm
 #RUN ln -s /usr/local/lib/libuv.so.1 /usr/lib64/libuv.so.1
 #RUN ln -s /usr/local/lib/libuv-devel.so.1 /usr/lib64/libuv-devel.so.1
 
 
-RUN yum install -y https://downloads.datastax.com/cpp-driver/centos/7/cassandra/v2.15.1/cassandra-cpp-driver-$CCP_DRIVER_VERSION-1.el7.x86_64.rpm
-RUN yum install -y https://downloads.datastax.com/cpp-driver/centos/7/cassandra/v2.15.1/cassandra-cpp-driver-devel-$CCP_DRIVER_VERSION-1.el7.x86_64.rpm
+# RUN yum install -y https://downloads.datastax.com/cpp-driver/centos/7/cassandra/v$CCP_DRIVER_VERSION/cassandra-cpp-driver-$CCP_DRIVER_VERSION-1.el7.x86_64.rpm
+# RUN yum install -y https://downloads.datastax.com/cpp-driver/centos/7/cassandra/v$CCP_DRIVER_VERSION/cassandra-cpp-driver-devel-$CCP_DRIVER_VERSION-1.el7.x86_64.rpm
+RUN yum install -y https://downloads.datastax.com/cpp-driver/centos/7/cassandra/v$CCP_DRIVER_VERSION/cassandra-cpp-driver-$CCP_DRIVER_VERSION-1.el7.centos.x86_64.rpm
+RUN yum install -y https://downloads.datastax.com/cpp-driver/centos/7/cassandra/v$CCP_DRIVER_VERSION/cassandra-cpp-driver-devel-$CCP_DRIVER_VERSION-1.el7.centos.x86_64.rpm
 
 
+RUN yum install -y automake cmake gcc gcc-c++ git libtool openssl-devel wget gmp gmp-devel boost php-devel pcre-devel 
 
 # RUN curl -A "Docker" -o /tmp/cassandra-cpp-driver_$CCP_DRIVER_VERSION-1_amd64.deb -D - -L -s https://downloads.datastax.com/cpp-driver/ubuntu/$UBUNTU_VERSION/cassandra/v$CCP_DRIVER_VERSION/cassandra-cpp-driver_$CCP_DRIVER_VERSION-1_amd64.deb  \
 #     && mkdir -p /tmp/cassandra-cpp && cd /tmp/cassandra-cpp \
@@ -98,7 +108,7 @@ RUN cp `php-config --extension-dir`/cassandra.so /tmp/cassandra.so
 # RUN pecl install cassandra-$CASSANDRA_VERSION 
     # && docker-php-ext-enable cassandra
 
-RUN cp `php-config --extension-dir`/cassandra.so /tmp/cassandra.so
+#RUN cp `php-config --extension-dir`/cassandra.so /tmp/cassandra.so
 
 # Build the final image from the lambci image that is close to the production environment
 FROM lambci/lambda:provided
@@ -119,7 +129,7 @@ COPY --from=ext /usr/lib64/libcassandra.so.2 /opt/bref/lib64/libcassandra.so.2
 COPY --from=ext /usr/lib64/libcassandra_static.a /opt/bref/lib64/libcassandra_static.a
 
 COPY --from=ext /usr/include/cassandra.h /opt/bref/include/cassandra.h
-COPY --from=ext /usr/include/dse.h /opt/bref/include/dse.h
+# COPY --from=ext /usr/include/dse.h /opt/bref/include/dse.h
 
 COPY --from=ext /usr/lib64/pkgconfig/cassandra.pc /opt/bref/lib64/pkgconfig/cassandra.pc
 COPY --from=ext /usr/lib64/pkgconfig/cassandra_static.pc /opt/bref/lib64/pkgconfig/cassandra_static.pc
