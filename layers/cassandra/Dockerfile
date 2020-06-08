@@ -2,12 +2,12 @@ ARG PHP_VERSION
 FROM bref/build-php-$PHP_VERSION AS ext
 
 # newest
-# ENV LIBUV_VERSION 1.35.0
-# ENV CCP_DRIVER_VERSION 2.15.1
+ENV LIBUV_VERSION 1.35.0
+ENV CCP_DRIVER_VERSION 2.15.2
 
 # post processor 
-ENV LIBUV_VERSION 1.18.0
-ENV CCP_DRIVER_VERSION 2.8.1
+# ENV LIBUV_VERSION 1.18.0
+# ENV CCP_DRIVER_VERSION 2.8.1
 #ENV CASSANDRA_VERSION 1.3.2
 
 
@@ -27,20 +27,20 @@ WORKDIR /tmp
 
 
 # Install dependencies
-# RUN curl -o -v libuv.rpm https://downloads.datastax.com/cpp-driver/centos/7/dependencies/libuv/v$LIBUV_VERSION/libuv-$LIBUV_VERSION-1.el7.x86_64.rpm
-RUN curl -o libuv.rpm https://downloads.datastax.com/cpp-driver/centos/7/dependencies/libuv/v$LIBUV_VERSION/libuv-$LIBUV_VERSION-1.el7.centos.x86_64.rpm
+RUN curl -o -v libuv.rpm https://downloads.datastax.com/cpp-driver/centos/7/dependencies/libuv/v$LIBUV_VERSION/libuv-$LIBUV_VERSION-1.el7.x86_64.rpm
+# RUN curl -o libuv.rpm https://downloads.datastax.com/cpp-driver/centos/7/dependencies/libuv/v$LIBUV_VERSION/libuv-$LIBUV_VERSION-1.el7.centos.x86_64.rpm
 RUN yum install -y libuv.rpm
-# RUN curl -o -v libuv-dev.rpm https://downloads.datastax.com/cpp-driver/centos/7/dependencies/libuv/v$LIBUV_VERSION/libuv-devel-$LIBUV_VERSION-1.el7.x86_64.rpm
-RUN curl -o libuv-dev.rpm https://downloads.datastax.com/cpp-driver/centos/7/dependencies/libuv/v$LIBUV_VERSION/libuv-devel-$LIBUV_VERSION-1.el7.centos.x86_64.rpm
+RUN curl -o -v libuv-dev.rpm https://downloads.datastax.com/cpp-driver/centos/7/dependencies/libuv/v$LIBUV_VERSION/libuv-devel-$LIBUV_VERSION-1.el7.x86_64.rpm
+# RUN curl -o libuv-dev.rpm https://downloads.datastax.com/cpp-driver/centos/7/dependencies/libuv/v$LIBUV_VERSION/libuv-devel-$LIBUV_VERSION-1.el7.centos.x86_64.rpm
 RUN yum install -y libuv-dev.rpm
 #RUN ln -s /usr/local/lib/libuv.so.1 /usr/lib64/libuv.so.1
 #RUN ln -s /usr/local/lib/libuv-devel.so.1 /usr/lib64/libuv-devel.so.1
 
 
-# RUN yum install -y https://downloads.datastax.com/cpp-driver/centos/7/cassandra/v$CCP_DRIVER_VERSION/cassandra-cpp-driver-$CCP_DRIVER_VERSION-1.el7.x86_64.rpm
-# RUN yum install -y https://downloads.datastax.com/cpp-driver/centos/7/cassandra/v$CCP_DRIVER_VERSION/cassandra-cpp-driver-devel-$CCP_DRIVER_VERSION-1.el7.x86_64.rpm
-RUN yum install -y https://downloads.datastax.com/cpp-driver/centos/7/cassandra/v$CCP_DRIVER_VERSION/cassandra-cpp-driver-$CCP_DRIVER_VERSION-1.el7.centos.x86_64.rpm
-RUN yum install -y https://downloads.datastax.com/cpp-driver/centos/7/cassandra/v$CCP_DRIVER_VERSION/cassandra-cpp-driver-devel-$CCP_DRIVER_VERSION-1.el7.centos.x86_64.rpm
+RUN yum install -y https://downloads.datastax.com/cpp-driver/centos/7/cassandra/v$CCP_DRIVER_VERSION/cassandra-cpp-driver-$CCP_DRIVER_VERSION-1.el7.x86_64.rpm
+RUN yum install -y https://downloads.datastax.com/cpp-driver/centos/7/cassandra/v$CCP_DRIVER_VERSION/cassandra-cpp-driver-devel-$CCP_DRIVER_VERSION-1.el7.x86_64.rpm
+# RUN yum install -y https://downloads.datastax.com/cpp-driver/centos/7/cassandra/v$CCP_DRIVER_VERSION/cassandra-cpp-driver-$CCP_DRIVER_VERSION-1.el7.centos.x86_64.rpm
+# RUN yum install -y https://downloads.datastax.com/cpp-driver/centos/7/cassandra/v$CCP_DRIVER_VERSION/cassandra-cpp-driver-devel-$CCP_DRIVER_VERSION-1.el7.centos.x86_64.rpm
 
 
 RUN yum install -y automake cmake gcc gcc-c++ git libtool openssl-devel wget gmp gmp-devel boost php-devel pcre-devel 
